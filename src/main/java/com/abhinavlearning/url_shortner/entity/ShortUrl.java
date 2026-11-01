@@ -16,6 +16,8 @@ import lombok.Setter;
 
 import java.time.Instant;
 
+import com.abhinavlearning.url_shortner.enums.ShortCodeMethod;
+
 @Entity
 @Table(
     name = "short_urls",

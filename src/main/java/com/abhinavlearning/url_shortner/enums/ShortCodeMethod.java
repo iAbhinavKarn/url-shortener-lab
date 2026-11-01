@@ -1,4 +1,4 @@
-package com.abhinavlearning.url_shortner.entity;
+package com.abhinavlearning.url_shortner.enums;
 
 public enum ShortCodeMethod {
     BASE62,
