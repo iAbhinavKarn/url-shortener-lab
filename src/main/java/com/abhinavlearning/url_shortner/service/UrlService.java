@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.abhinavlearning.url_shortner.entity.ShortUrl;
 import com.abhinavlearning.url_shortner.enums.ShortCodeMethod;
+import com.abhinavlearning.url_shortner.records.response.ShortUrlResponse;
 import com.abhinavlearning.url_shortner.repository.ShortUrlRepository;
 import com.abhinavlearning.url_shortner.utils.HashGenerator;
 import com.abhinavlearning.url_shortner.utils.RandomStringGenerator;
@@ -12,13 +13,13 @@ import com.abhinavlearning.url_shortner.utils.RandomStringGenerator;
 @Service 
 public class UrlService {
 
-    private ShortUrlRepository shortUrlRepository;
+    private final ShortUrlRepository shortUrlRepository;
 
     public UrlService(ShortUrlRepository shortUrlRepository) {
         this.shortUrlRepository = shortUrlRepository;
     }
 
-    public String generateShortUrl(String originalUrl) {
+    public ShortUrlResponse generateShortUrl(String originalUrl) {
         String shortUrl = generateHashString(originalUrl);
 
         Optional<ShortUrl> existingShortUrl = shortUrlRepository.findByShortCode(shortUrl);
@@ -26,13 +27,13 @@ public class UrlService {
         ShortUrl newShortUrl = new ShortUrl();
 
         if(existingShortUrl.isPresent()){
-            int attempt = 1;
+            int attempt = 0;
             String nonce = generateNonce();
 
             while(existingShortUrl.isPresent()){
+                attempt++;
                 shortUrl = generateHashString(originalUrl, attempt, nonce);
                 existingShortUrl = shortUrlRepository.findByShortCode(shortUrl);
-                attempt++;
             }
 
             newShortUrl.setHashSalt(nonce);
@@ -43,7 +44,7 @@ public class UrlService {
         newShortUrl.setShortCode(shortUrl);
         newShortUrl.setGenerationMethod(ShortCodeMethod.HASH);
         shortUrlRepository.save(newShortUrl);
-        return shortUrl;
+        return new ShortUrlResponse(shortUrl);
     }
 
     private String generateHashString(String originalUrl, int attempt, String nonce) {

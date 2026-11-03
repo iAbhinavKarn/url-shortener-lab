@@ -2,12 +2,15 @@ package com.abhinavlearning.url_shortner.utils;
 
 import java.security.SecureRandom;
 
-public class RandomStringGenerator {
+public final class RandomStringGenerator {
 
     private static final String ALPHABET =
             "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+
+    private RandomStringGenerator() {
+    }
 
     public static String generateSecureRandomString(int length) {
         StringBuilder result = new StringBuilder(length);

@@ -5,14 +5,23 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class HashGenerator {
+public final class HashGenerator {
 
     private static final String BASE62_ALPHABET =
             "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+    private static final int SHORT_CODE_LENGTH = 6;
+
+    private HashGenerator() {
+    }
+
     public static String sha256(String input) {
+        return sha256(input, "SHA-256");
+    }
+
+    static String sha256(String input, String algorithm) {
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            MessageDigest digest = MessageDigest.getInstance(algorithm);
 
             byte[] hashBytes = digest.digest(
                     input.getBytes(StandardCharsets.UTF_8)
@@ -20,14 +29,14 @@ public class HashGenerator {
 
             String base62Encoded = toBase62(new BigInteger(1, hashBytes));
 
-            return base62Encoded.substring(0, 6);
+            return base62Encoded.substring(0, SHORT_CODE_LENGTH);
 
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("SHA-256 is unavailable", e);
         }
     }
 
-    private static String toBase62(BigInteger number) {
+    static String toBase62(BigInteger number) {
         if (number.equals(BigInteger.ZERO)) {
             return "0";
         }

@@ -52,3 +52,24 @@ The generated OpenAPI specification is available at:
 ```text
 http://localhost:8080/v3/api-docs
 ```
+
+## Testing and coverage
+
+The project includes unit tests for:
+
+- Base62 hash generation and six-character short-code rules
+- Secure random nonce generation
+- URL service persistence and collision recovery
+- Controller request-to-service mapping
+
+Run the full test suite and generate the JaCoCo report with:
+
+```bash
+./gradlew clean check jacocoTestReport
+```
+
+The build enforces 100% instruction, branch, line, complexity, method, and class coverage for the application logic. Open the HTML report at:
+
+```text
+build/reports/jacoco/test/html/index.html
+```
